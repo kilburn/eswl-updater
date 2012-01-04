@@ -1,0 +1,5 @@
+#!/bin/sh
+
+WGET=/usr/bin/wget
+DSTDIR=/etc/postfix
+POSTMAP=/usr/sbin/postmap

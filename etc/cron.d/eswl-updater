@@ -1,0 +1,2 @@
+# Update the whitelists once a day
+20 2 * * *	root	/usr/local/bin/eswl-updater

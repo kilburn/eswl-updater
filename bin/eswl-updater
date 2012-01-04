@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Configuration file
+DEFAULT=/etc/default/eswl-updater
+
+# Default settings, possibly overriden in the file above
+WGET=/usr/bin/wget
+DSTDIR=/etc/postfix
+POSTMAP=/usr/sbin/postmap
+
+# Load the overriding settings
+if [ -f $DEFAULT ]; then
+	. $DEFAULT
+fi
+
+# Download the eswl whitelist (members of abuse.es)
+$WGET -q -O $DSTDIR/eswl-whitelist \
+	'http://www.abuses.es/eswl/data/eswl.postfixcidr.txt'
+if [ "$?" -ne "0" ]; then
+	echo "Unable to update eswl whitelist."
+	exit 1
+fi
+
+# Download the mtawl whitelist (non-members of abuse.es)
+$WGET -q -O $DSTDIR/mtawl-whitelist \
+	'http://www.abuses.es/eswl/data/mtawl.postfixcidr.txt'
+if [ "$?" -ne "0" ]; then
+	echo "Unable to update eswl whitelist."
+	exit 1
+fi
+
+# Postmap the files for postfix
+cd $DSTDIR
+$POSTMAP eswl-whitelist
+$POSTMAP mtawl-whitelist
